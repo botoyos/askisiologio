@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ΑΣΚΗΣΙΟΛΟΓΙΟ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .muscle-groups {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .muscle-btn {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .muscle-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .muscle-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(40,167,69,0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .results {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            min-height: 200px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results h3 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        .exercise-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #007bff;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .exercise-card:hover {
+            transform: translateX(5px);
+        }
+
+        .exercise-card h4 {
+            color: #333;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .exercise-details {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .detail-item {
+            background: #e9ecef;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .clear-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            margin-left: 15px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .muscle-groups {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .generate-btn {
+                width: 100%;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏋️ ΑΣΚΗΣΙΟΛΟΓΙΟ</h1>
+            <p>Επίλεξε μυϊκές ομάδες και πάτα Generate για νέες ασκήσεις!</p>
+        </div>
+
+        <div class="muscle-groups">
+            <div class="muscle-btn" data-muscle="στήθος">
+                <span class="emoji">💪</span>Στήθος
+            </div>
+            <div class="muscle-btn" data-muscle="πλάτη">
+                <span class="emoji">🔙</span>Πλάτη
+            </div>
+            <div class="muscle-btn" data-muscle="πόδια">
+                <span class="emoji">🦵</span>Πόδια
+            </div>
+            <div class="muscle-btn" data-muscle="χέρια">
+                <span class="emoji">💪</span>Χέρια
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="generate-btn" onclick="generateWorkout()">
+                🎲 GENERATE WORKOUT
+            </button>
+            <button class="clear-btn" onclick="clearSelection()">
+                Clear All
+            </button>
+        </div>
+
+        <div id="results" class="results">
+            <h3>🏆 Το Πρόγραμμά Σου</h3>
+            <div id="exerciseList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Βάση δεδομένων ασκήσεων
+        const exercises = {
+            "στήθος": [
+                {name: "Push-ups", difficulty: "Αρχάριος", equipment: "Χωρίς εξοπλισμό"},
+                {name: "Bench Press", difficulty: "Μεσαίος", equipment: "Βάρη"},
+                {name: "Incline Push-ups", difficulty: "Αρχάριος", equipment: "Χωρίς εξοπλισμό"},
+                {name: "Dumbbell Flyes", difficulty: "Μεσαίος", equipment: "Βάρη"},
+                {name: "Diamond Push-ups", difficulty: "Προχωρημένος", equipment: "Χωρίς εξοπλισμό"},
+                {name: "Cable Chest Press", difficulty: "Μεσαίος", equipment: "Μηχάνημα"},
+                {name: "Chest Dips", difficulty: "Μεσαίος", equipment: "Χωρίς εξοπλισμό"}
+            ],
+            "πλάτη": [
+                {name: "Pull-ups", difficulty: "Μεσαίος", equipment: "Μπάρα"},
+                {name: "Bent-over Rows", difficulty: "Μεσαίος", equipment: "Βάρη"},
+                {name: "Lat Pulldowns", difficulty: "Αρχάριος", equipment: "Μηχάνημα"},
+                {name: "Deadlifts", difficulty: "Προχωρημένος", equipment: "Βάρη"},
+                {name: "Superman", difficulty: "Αρχάριος", equipment: "Χωρίς εξοπλισμό"},
+                {name: "T-Bar Rows", difficulty: "Μεσαίος", equipment: "Βάρη"},
+                {name: "Face Pulls", difficulty: "Μεσαίος", equipment: "Μηχάνημα"}
+            ],
+            "πόδια": [
+                {name: "Squats", difficulty: "Αρχάριος", equipment: "Χωρίς εξοπλισμό"},
+                {name: "Lunges", difficulty: "Αρχάριος", equipment: "Χωρίς εξοπλισμό"},
+                {name: "Deadlifts", difficulty: "Προχωρημένος", equipment: "Βάρη"},
+                {name: "Leg Press", difficulty: "Μεσαίος", equipment: "Μηχάνημα"},
+                {name: "Bulgarian Split Squats", difficulty: "Μεσαίος", equipment: "Χωρίς εξοπλισμό"},
+                {name: "Calf Raises", difficulty: "Αρχάριος", equipment: "Χωρίς εξοπλισμό"},
+                {name: "Wall Sits", difficulty: "Αρχάριος", equipment: "Χωρίς εξοπλισμό"}
+            ],
+            "χέρια": [
+                {name: "Bicep Curls", difficulty: "Αρχάριος", equipment: "Βάρη"},
+                {name: "Tricep Dips", difficulty: "Μεσαίος", equipment: "Χωρίς εξοπλισμό"},
+                {name: "Hammer Curls", difficulty: "Μεσαίος", equipment: "Βάρη"},
+                {name: "Overhead Press", difficulty: "Μεσαίος", equipment: "Βάρη"},
+                {name: "Close-grip Push-ups", difficulty: "Μεσαίος", equipment: "Χωρίς εξοπλισμό"},
+                {name: "Cable Curls", difficulty: "Αρχάριος", equipment: "Μηχάνημα"},
+                {name: "Tricep Extensions", difficulty: "Μεσαίος", equipment: "Βάρη"}
+            ]
+        };
+
+        let selectedMuscles = new Set();
+
+        // Επιλογή μυϊκών ομάδων
+        document.querySelectorAll('.muscle-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const muscle = this.dataset.muscle;
+                
+                if (selectedMuscles.has(muscle)) {
+                    selectedMuscles.delete(muscle);
+                    this.classList.remove('active');
+                } else {
+                    selectedMuscles.add(muscle);
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Γέννηση προγράμματος
+        function generateWorkout() {
+            // Αν δεν έχει επιλεγεί καμία μυϊκή ομάδα, επιλέγουμε τυχαία
+            let targetMuscles = Array.from(selectedMuscles);
+            if (targetMuscles.length === 0) {
+                targetMuscles = Object.keys(exercises);
+            }
+
+            // Συλλογή όλων των διαθέσιμων ασκήσεων
+            let availableExercises = [];
+            targetMuscles.forEach(muscle => {
+                exercises[muscle].forEach(exercise => {
+                    availableExercises.push({
+                        ...exercise,
+                        muscleGroup: muscle
+                    });
+                });
+            });
+
+            // Τυχαία επιλογή 3 ασκήσεων
+            const selectedExercises = [];
+            const usedMuscles = new Set();
+            
+            // Προσπάθεια για διαφορετικές μυϊκές ομάδες
+            for (let i = 0; i < 3 && selectedExercises.length < 3; i++) {
+                const remainingExercises = availableExercises.filter(ex => 
+                    !usedMuscles.has(ex.muscleGroup)
+                );
+                
+                if (remainingExercises.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * remainingExercises.length);
+                    const selected = remainingExercises[randomIndex];
+                    selectedExercises.push(selected);
+                    usedMuscles.add(selected.muscleGroup);
+                }
+            }
+
+            // Αν χρειαζόμαστε περισσότερες ασκήσεις
+            while (selectedExercises.length < 3 && availableExercises.length > selectedExercises.length) {
+                const remaining = availableExercises.filter(ex => 
+                    !selectedExercises.includes(ex)
+                );
+                if (remaining.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * remaining.length);
+                    selectedExercises.push(remaining[randomIndex]);
+                }
+            }
+
+            displayWorkout(selectedExercises);
+        }
+
+        // Εμφάνιση προγράμματος
+        function displayWorkout(exercises) {
+            const resultsDiv = document.getElementById('results');
+            const exerciseList = document.getElementById('exerciseList');
+            
+            let html = '';
+            exercises.forEach((exercise, index) => {
+                html += `
+                    <div class="exercise-card">
+                        <h4>${index + 1}. ${exercise.name}</h4>
+                        <div class="exercise-details">
+                            <span class="detail-item">🎯 ${exercise.muscleGroup.charAt(0).toUpperCase() + exercise.muscleGroup.slice(1)}</span>
+                            <span class="detail-item">📊 ${exercise.difficulty}</span>
+                            <span class="detail-item">🔧 ${exercise.equipment}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            exerciseList.innerHTML = html;
+            resultsDiv.classList.add('show');
+            
+            // Smooth scroll στα αποτελέσματα
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Καθαρισμός επιλογών
+        function clearSelection() {
+            selectedMuscles.clear();
+            document.querySelectorAll('.muscle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.classList.remove('show');
+        }
+
+        // Πάτημα Enter για generate
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateWorkout();
+            }
+        });
+    </script>
+</body>
+</html>
